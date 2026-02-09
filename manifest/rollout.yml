@@ -16,7 +16,7 @@ spec:
         - name: ecr-registry-key
       containers:
       - name: vj-app
-        image: 487383300987.dkr.ecr.us-east-1.amazonaws.com/vj-app:latest # Your CI will replace this
+        image: 487383300987.dkr.ecr.us-east-1.amazonaws.com/vj-app:327190a3255c98acd1d1eaafc25f6b72aba878f2
         ports:
         - containerPort: 9000
   strategy:
