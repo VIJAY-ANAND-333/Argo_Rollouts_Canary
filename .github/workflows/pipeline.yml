@@ -1,12 +1,12 @@
 name: Python CI & ECR GitOps Deploy
 
-# on:
-#   push:
-#     branches: [ main ]
-#     paths:
-#       - 'ci/**'
-#       - '.github/workflows/ci.yml'
-#   workflow_dispatch:
+on:
+  push:
+    branches: [ main ]
+    paths:
+      - 'ci/**'
+      - '.github/workflows/pipeline.yml'
+  workflow_dispatch:
 
 jobs:
 
@@ -51,12 +51,12 @@ jobs:
       - name: Update Rollout Manifest
         run: |
           ECR_IMAGE="${{ steps.login-ecr.outputs.registry }}/vj-app:${{ github.sha }}"
-          sed -i "s|image:.*|image: $ECR_IMAGE|g" manifests/rollout.yaml
+          sed -i "s|image:.*|image: $ECR_IMAGE|g" manifest/rollout.yml
           
       - name: Commit and Push Change
         run: |
           git config --global user.name "github-actions[bot]"
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
-          git add manifests/rollout.yaml
+          git add manifest/rollout.yml
           git commit -m "deploy: update ECR image to ${GITHUB_SHA::7} [skip ci]"
           git push

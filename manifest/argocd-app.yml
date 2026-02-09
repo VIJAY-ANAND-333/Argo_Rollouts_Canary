@@ -1,0 +1,20 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: vj-app-canary
+  namespace: argocd
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/Vijay-Anand-Bruce/argo-rollouts.git
+    targetRevision: main
+    path: manifest          # The folder where your k8s files live
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: default       # Where the app will be deployed
+  syncPolicy:
+    automated:               # Self-healing and auto-sync
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true

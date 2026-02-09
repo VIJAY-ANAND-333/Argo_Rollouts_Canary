@@ -12,9 +12,11 @@ spec:
       labels:
         app: vj-app
     spec:
+      imagePullSecrets:
+        - name: ecr-registry-key
       containers:
       - name: vj-app
-        image: <IMAGE_PLACEHOLDER> # Your CI will replace this
+        image: 487383300987.dkr.ecr.us-east-1.amazonaws.com/vj-app:latest # Your CI will replace this
         ports:
         - containerPort: 9000
   strategy:
