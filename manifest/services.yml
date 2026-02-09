@@ -1,0 +1,25 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: vj-app-stable
+spec:
+  ports:
+  - port: 80
+    targetPort: 9000
+    protocol: TCP
+    name: http
+  selector:
+    app: vj-app
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: vj-app-canary
+spec:
+  ports:
+  - port: 80
+    targetPort: 9000
+    protocol: TCP
+    name: http
+  selector:
+    app: vj-app

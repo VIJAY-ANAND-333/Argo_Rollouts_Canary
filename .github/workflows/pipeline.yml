@@ -1,0 +1,62 @@
+name: Python CI & ECR GitOps Deploy
+
+# on:
+#   push:
+#     branches: [ main ]
+#     paths:
+#       - 'ci/**'
+#       - '.github/workflows/ci.yml'
+#   workflow_dispatch:
+
+jobs:
+
+  build-and-push-ecr:
+    runs-on: ubuntu-latest
+    # Required for OIDC if you ever switch from Secrets to Roles
+    permissions:
+      id-token: write
+      contents: write
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      # 1. Configure AWS Credentials
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ secrets.AWS_REGION }}
+
+      # 2. Login to Amazon ECR
+      - name: Login to Amazon ECR
+        id: login-ecr
+        uses: aws-actions/amazon-ecr-login@v2
+
+      # 3. Build, Tag, and Push
+      - name: Build and Push to ECR
+        id: build-image
+        uses: docker/build-push-action@v5
+        with:
+          context: ./ci
+          file: ./ci/Dockerfile
+          push: true
+          # We get the registry URL from the login step output
+          tags: |
+            ${{ steps.login-ecr.outputs.registry }}/vj-app:${{ github.sha }}
+            ${{ steps.login-ecr.outputs.registry }}/vj-app:latest
+
+      # 4. Update GitOps Manifest
+      - name: Update Rollout Manifest
+        run: |
+          ECR_IMAGE="${{ steps.login-ecr.outputs.registry }}/vj-app:${{ github.sha }}"
+          sed -i "s|image:.*|image: $ECR_IMAGE|g" manifests/rollout.yaml
+          
+      - name: Commit and Push Change
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          git add manifests/rollout.yaml
+          git commit -m "deploy: update ECR image to ${GITHUB_SHA::7} [skip ci]"
+          git push

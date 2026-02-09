@@ -1,0 +1,32 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Rollout
+metadata:
+  name: vj-app
+spec:
+  replicas: 4
+  selector:
+    matchLabels:
+      app: vj-app
+  template:
+    metadata:
+      labels:
+        app: vj-app
+    spec:
+      containers:
+      - name: vj-app
+        image: <IMAGE_PLACEHOLDER> # Your CI will replace this
+        ports:
+        - containerPort: 9000
+  strategy:
+    canary:
+      # These services are created below
+      canaryService: vj-app-canary
+      stableService: vj-app-stable
+      trafficRouting:
+        nginx:
+          stableIngress: vj-app-ingress
+      steps:
+      - setWeight: 25
+      - pause: {duration: 2m}  # Wait 2 mins, then go to 50%
+      - setWeight: 50
+      - pause: {}              # Wait for manual promotion to 100%
