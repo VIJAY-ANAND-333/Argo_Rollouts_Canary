@@ -13,3 +13,4 @@ ENV FLASK_ENV=production
 EXPOSE 9000
 
 CMD ["gunicorn", "--bind", "0.0.0.0:9000", "app:app"]
+
