@@ -23,7 +23,7 @@ A production-ready Progressive Delivery pipeline demonstrating Canary deployment
 
 ---
 
-## 🎯 Overview
+##  Overview
 
 This repository demonstrates a production-grade Canary deployment strategy that:
 
@@ -36,7 +36,7 @@ This repository demonstrates a production-grade Canary deployment strategy that:
 
 ---
 
-## 🚀 Deployment Strategy
+##  Deployment Strategy
 
 The Canary strategy progressively moves traffic from a stable version to a new release through three distinct phases:
 
