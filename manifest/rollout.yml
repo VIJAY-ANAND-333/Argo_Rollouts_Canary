@@ -16,7 +16,7 @@ spec:
         - name: ecr-registry-key
       containers:
       - name: vj-app
-        image: <IMAGE_PLACEHOLDER>
+        image: 312506040363.dkr.ecr.us-east-1.amazonaws.com/vj-app:60e48509a70ac2a5775774c60fac1d0e08affb92
         ports:
         - containerPort: 9000
   strategy:
