@@ -8,10 +8,10 @@ spec:
   source:
     repoURL: https://github.com/Vijay-Anand-Bruce/argo-rollouts.git
     targetRevision: main
-    path: manifest          # The folder where your k8s files live
+    path: manifest          
   destination:
     server: https://kubernetes.default.svc
-    namespace: default       # Where the app will be deployed
+    namespace: default       
   syncPolicy:
     automated:               # Self-healing and auto-sync
       prune: true
